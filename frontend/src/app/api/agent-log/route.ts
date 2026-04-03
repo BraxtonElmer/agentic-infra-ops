@@ -1,6 +1,28 @@
 import { NextResponse } from 'next/server';
 
+const BACKEND = process.env.BACKEND_URL ?? 'http://127.0.0.1:8000';
+
 export async function GET() {
+  try {
+    const res = await fetch(`${BACKEND}/api/agent-log`, { cache: 'no-store' });
+    const data = await res.json();
+    return NextResponse.json(data);
+  } catch {
+    return NextResponse.json({ error: 'backend unavailable' }, { status: 502 });
+  }
+}
+
+export async function POST() {
+  try {
+    const res = await fetch(`${BACKEND}/api/agent-log/scan`, { method: 'POST', cache: 'no-store' });
+    const data = await res.json();
+    return NextResponse.json(data);
+  } catch {
+    return NextResponse.json({ error: 'backend unavailable' }, { status: 502 });
+  }
+}
+
+function _mock() {
   return NextResponse.json({
     entries: [
       { id: 'l01', timestamp: '14:32:01', type: 'scan', target: 'prod-cluster', message: 'Completed infrastructure health scan. 2 critical issues found: prod-worker-03 memory at 96%, disk usage at 72%.', reasoning: 'Scanned 6 servers and 8 containers. Evaluated CPU, RAM, disk metrics against configured thresholds. prod-worker-03 exceeds critical threshold for RAM (96% > 90%).' },

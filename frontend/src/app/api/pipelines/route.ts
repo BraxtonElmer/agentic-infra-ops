@@ -1,6 +1,18 @@
 import { NextResponse } from 'next/server';
 
+const BACKEND = process.env.BACKEND_URL ?? 'http://127.0.0.1:8000';
+
 export async function GET() {
+  try {
+    const res = await fetch(`${BACKEND}/api/pipelines`, { cache: 'no-store' });
+    const data = await res.json();
+    return NextResponse.json(data);
+  } catch {
+    return NextResponse.json({ error: 'backend unavailable' }, { status: 502 });
+  }
+}
+
+function _mock() {
   return NextResponse.json({
     pipelines: [
       { id: 'p1', repo: 'axiom-api', branch: 'main', triggeredBy: 'push', status: 'fail', error: 'ENOMEM', duration: null, timestamp: '2026-04-03T14:20:00Z', log: 'Step 4/8: RUN npm run build\n> axiom-api@2.1.0 build\n> tsc && esbuild src/index.ts\n\nnode:internal/process: ENOMEM — JavaScript heap out of memory\n\nFATAL ERROR: Reached heap limit Allocation failed\nError: Process exited with code 134', diagnosis: { rootCause: 'Node.js heap memory exhaustion during TypeScript compilation', affectedFile: 'Dockerfile (memory limit: 2GB)', recommendation: 'Increase container memory limit to 4GB or add --max-old-space-size=4096 to NODE_OPTIONS' }, diff: { removed: 'ENV NODE_OPTIONS="--max-old-space-size=2048"', added: 'ENV NODE_OPTIONS="--max-old-space-size=4096"' } },

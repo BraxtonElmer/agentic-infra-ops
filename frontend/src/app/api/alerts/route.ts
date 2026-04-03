@@ -1,6 +1,18 @@
 import { NextResponse } from 'next/server';
 
+const BACKEND = process.env.BACKEND_URL ?? 'http://127.0.0.1:8000';
+
 export async function GET() {
+  try {
+    const res = await fetch(`${BACKEND}/api/alerts`, { cache: 'no-store' });
+    const data = await res.json();
+    return NextResponse.json(data);
+  } catch {
+    return NextResponse.json({ error: 'backend unavailable' }, { status: 502 });
+  }
+}
+
+function _mock() {
   return NextResponse.json({
     active: [
       { id: 'al1', severity: 'critical', title: 'Node pool memory exhaustion', resource: 'prod-worker-03', timestamp: '2026-04-03T14:32:00Z', assessment: 'RAM at 96%. Redis and axiom-api combined are consuming 77% of available memory. OOMKill is imminent if load increases.', recommendation: 'Scale horizontally by adding prod-worker-04, or vertically by upgrading to r5.4xlarge.' },

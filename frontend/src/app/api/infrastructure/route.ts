@@ -1,6 +1,18 @@
 import { NextResponse } from 'next/server';
 
+const BACKEND = process.env.BACKEND_URL ?? 'http://127.0.0.1:8000';
+
 export async function GET() {
+  try {
+    const res = await fetch(`${BACKEND}/api/infrastructure`, { cache: 'no-store' });
+    const data = await res.json();
+    return NextResponse.json(data);
+  } catch {
+    return NextResponse.json({ error: 'backend unavailable' }, { status: 502 });
+  }
+}
+
+function _mock() {
   return NextResponse.json({
     servers: [
       { id: 's1', name: 'prod-worker-01', instanceType: 't3.xlarge', region: 'ap-south-1', uptime: '42d 7h', cpu: 62, ram: 71, disk: 45, netIn: '142 MB/s', netOut: '38 MB/s', critical: false },

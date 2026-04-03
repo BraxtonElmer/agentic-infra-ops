@@ -1,6 +1,19 @@
 import { NextResponse } from 'next/server';
 
+const BACKEND = process.env.BACKEND_URL ?? 'http://127.0.0.1:8000';
+
 export async function GET() {
+  try {
+    const res = await fetch(`${BACKEND}/api/overview`, { cache: 'no-store' });
+    const data = await res.json();
+    return NextResponse.json(data);
+  } catch {
+    return NextResponse.json({ error: 'backend unavailable' }, { status: 502 });
+  }
+}
+
+// ── Fallback mock (used only if backend is down) ──────────────────────────
+function _mock() {
   return NextResponse.json({
     healthScore: 82,
     healthStatus: 'amber',
