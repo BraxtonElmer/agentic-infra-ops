@@ -1,0 +1,149 @@
+@import "tailwindcss";
+
+/* ── Design Tokens ── */
+
+:root,
+.dark {
+  /* Dark mode (default) */
+  --bg-base: #0c0e12;
+  --bg-surface: #13161c;
+  --bg-elevated: #1a1e27;
+  --bg-overlay: #20252f;
+
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.10);
+  --border-strong: rgba(255, 255, 255, 0.16);
+
+  --text-primary: #f0f2f5;
+  --text-secondary: #8b92a0;
+  --text-muted: #4a5060;
+
+  --accent-blue: #5b8af0;
+  --accent-green: #3dba87;
+  --accent-amber: #e8a030;
+  --accent-red: #e05555;
+  --accent-purple: #9b7fe8;
+
+  --accent-blue-bg: rgba(91, 138, 240, 0.10);
+  --accent-green-bg: rgba(61, 186, 135, 0.10);
+  --accent-amber-bg: rgba(232, 160, 48, 0.10);
+  --accent-red-bg: rgba(224, 85, 85, 0.10);
+  --accent-purple-bg: rgba(155, 127, 232, 0.10);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* Light mode */
+:root.light,
+.light {
+  --bg-base: #f5f5f4;
+  --bg-surface: #ffffff;
+  --bg-elevated: #f0f0ef;
+  --bg-overlay: #e8e8e6;
+
+  --border-subtle: rgba(0, 0, 0, 0.06);
+  --border-default: rgba(0, 0, 0, 0.10);
+  --border-strong: rgba(0, 0, 0, 0.16);
+
+  --text-primary: #111318;
+  --text-secondary: #5a6070;
+  --text-muted: #9a9fa8;
+}
+
+@theme inline {
+  --color-bg-base: var(--bg-base);
+  --color-bg-surface: var(--bg-surface);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-bg-overlay: var(--bg-overlay);
+
+  --color-border-subtle: var(--border-subtle);
+  --color-border-default: var(--border-default);
+  --color-border-strong: var(--border-strong);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+
+  --color-accent-blue: var(--accent-blue);
+  --color-accent-green: var(--accent-green);
+  --color-accent-amber: var(--accent-amber);
+  --color-accent-red: var(--accent-red);
+  --color-accent-purple: var(--accent-purple);
+
+  --color-accent-blue-bg: var(--accent-blue-bg);
+  --color-accent-green-bg: var(--accent-green-bg);
+  --color-accent-amber-bg: var(--accent-amber-bg);
+  --color-accent-red-bg: var(--accent-red-bg);
+  --color-accent-purple-bg: var(--accent-purple-bg);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* ── Base ── */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+}
+
+/* ── Utility classes ── */
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Section label */
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-subtle);
+}
+
+/* Pulsing dot */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-strong);
+}
