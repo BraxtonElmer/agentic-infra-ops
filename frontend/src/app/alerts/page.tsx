@@ -27,9 +27,9 @@ const severityBadge: Record<string, 'red' | 'amber' | 'blue'> = {
 };
 
 const severityBg: Record<string, string> = {
-  critical: 'border-l-2 border-l-accent-red bg-accent-red-bg/30',
-  warning: 'border-l-2 border-l-accent-amber',
-  info: 'border-l-2 border-l-accent-blue',
+  critical: 'border-l-2 border-l-accent-red/60',
+  warning: 'border-l-2 border-l-accent-amber/60',
+  info: 'border-l-2 border-l-border-strong',
 };
 
 export default function AlertsPage() {
@@ -40,7 +40,7 @@ export default function AlertsPage() {
     return (
       <>
         <Topbar title="Alerts" />
-        <div className="p-5 space-y-3">
+        <div className="p-4 sm:p-5 space-y-3">
           {[1, 2, 3].map((i) => <Skeleton key={i} className="h-32" />)}
         </div>
       </>
@@ -50,7 +50,7 @@ export default function AlertsPage() {
   return (
     <>
       <Topbar title="Alerts" />
-      <div className="p-5 space-y-4">
+      <div className="p-4 sm:p-5 space-y-4">
         {/* Tabs */}
         <div className="flex items-center gap-1">
           {(['active', 'history'] as const).map((t) => (
@@ -58,7 +58,7 @@ export default function AlertsPage() {
               key={t}
               onClick={() => setTab(t)}
               className={`h-8 px-3 rounded-[6px] text-[13px] font-medium transition-colors cursor-pointer ${
-                tab === t ? 'bg-accent-blue-bg text-accent-blue' : 'text-text-secondary hover:bg-bg-elevated'
+                tab === t ? 'bg-bg-elevated text-text-primary' : 'text-text-secondary hover:bg-bg-elevated'
               }`}
             >
               {t === 'active' ? `Active (${data.active.length})` : 'History'}
@@ -70,7 +70,7 @@ export default function AlertsPage() {
           <div className="space-y-3">
             {data.active.map((alert) => (
               <Card key={alert.id} className={`p-4 ${severityBg[alert.severity] || ''}`}>
-                <div className="flex items-start gap-3">
+                <div className="flex flex-col sm:flex-row items-start gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1.5">
                       <Badge variant={severityBadge[alert.severity] || 'muted'}>{alert.severity}</Badge>
@@ -91,7 +91,7 @@ export default function AlertsPage() {
                       <p className="text-[12px] text-text-secondary">{alert.recommendation}</p>
                     </div>
                   </div>
-                  <div className="flex flex-col gap-1.5 shrink-0">
+                  <div className="flex sm:flex-col gap-1.5 shrink-0">
                     <Button size="sm" variant="primary">Auto-fix</Button>
                     <Button size="sm" variant="secondary">Acknowledge</Button>
                     <Button size="sm" variant="ghost">Dismiss</Button>
@@ -104,7 +104,8 @@ export default function AlertsPage() {
 
         {tab === 'history' && (
           <Card className="overflow-hidden">
-            <table className="w-full text-[13px]">
+            <div className="overflow-x-auto">
+            <table className="w-full text-[13px] min-w-[600px]">
               <thead>
                 <tr className="border-b border-border-subtle text-text-muted text-[11px] font-mono uppercase tracking-wider">
                   <th className="text-left py-2.5 px-4 font-medium">Title</th>
@@ -130,6 +131,7 @@ export default function AlertsPage() {
                 ))}
               </tbody>
             </table>
+            </div>
           </Card>
         )}
       </div>

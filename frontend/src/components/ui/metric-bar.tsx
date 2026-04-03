@@ -8,7 +8,7 @@ interface MetricBarProps {
 function getBarColor(pct: number) {
   if (pct >= 90) return 'bg-accent-red';
   if (pct >= 70) return 'bg-accent-amber';
-  return 'bg-accent-green';
+  return 'bg-border-strong';
 }
 
 export function MetricBar({ value, max = 100, label, showValue = true }: MetricBarProps) {

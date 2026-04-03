@@ -76,15 +76,15 @@ export default function SettingsPage() {
   return (
     <>
       <Topbar title="Settings" />
-      <div className="p-5 flex gap-5">
+      <div className="p-4 sm:p-5 flex flex-col md:flex-row gap-5">
         {/* Sub-nav */}
-        <div className="w-48 shrink-0 space-y-0.5">
+        <div className="flex md:flex-col md:w-48 shrink-0 gap-0.5 overflow-x-auto md:overflow-visible pb-1 md:pb-0 border-b md:border-b-0 md:border-r-0 border-border-subtle md:pr-0">
           {sections.map((s) => (
             <button
               key={s.key}
               onClick={() => setActiveSection(s.key)}
-              className={`w-full text-left h-8 px-3 rounded-[6px] text-[13px] transition-colors cursor-pointer ${
-                activeSection === s.key ? 'bg-accent-blue-bg text-accent-blue' : 'text-text-secondary hover:bg-bg-elevated'
+              className={`md:w-full text-left h-8 px-3 rounded-[6px] text-[13px] transition-colors cursor-pointer whitespace-nowrap ${
+                activeSection === s.key ? 'bg-white/[0.07] text-text-primary' : 'text-text-secondary hover:bg-white/[0.04] hover:text-text-primary'
               }`}
             >
               {s.label}
@@ -108,9 +108,9 @@ export default function SettingsPage() {
                   ))}
                   <div className="pt-2">
                     <div className="section-label mb-2">Connect Repo</div>
-                    <div className="flex items-center gap-2">
-                      <Input placeholder="Repository URL" className="flex-1" />
-                      <Input placeholder="Access token" className="w-48" type="password" />
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Input placeholder="Repository URL" className="flex-1 min-w-[160px]" />
+                      <Input placeholder="Access token" className="w-full sm:w-48" type="password" />
                       <Button variant="primary" size="sm">Connect</Button>
                     </div>
                   </div>
@@ -129,11 +129,11 @@ export default function SettingsPage() {
                   ))}
                   <div className="pt-2">
                     <div className="section-label mb-2">Add Server</div>
-                    <div className="flex items-center gap-2">
-                      <Input placeholder="SSH host" className="flex-1" />
-                      <Input placeholder="Port" className="w-20" />
-                      <Input placeholder="User" className="w-28" />
-                      <Input placeholder="API key or SSH key path" className="w-48" type="password" />
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Input placeholder="SSH host" className="flex-1 min-w-[120px]" />
+                      <Input placeholder="Port" className="w-16" />
+                      <Input placeholder="User" className="w-24" />
+                      <Input placeholder="API key or SSH key path" className="flex-1 min-w-[140px]" type="password" />
                       <Button variant="primary" size="sm">Add</Button>
                     </div>
                   </div>
@@ -154,7 +154,7 @@ export default function SettingsPage() {
                         name="provider"
                         checked={provider === p}
                         onChange={() => setProvider(p)}
-                        className="accent-[var(--accent-blue)]"
+                        className=""
                       />
                       <span className={`text-[13px] ${provider === p ? 'text-text-primary' : 'text-text-secondary'}`}>
                         {p.charAt(0).toUpperCase() + p.slice(1)}
@@ -168,7 +168,7 @@ export default function SettingsPage() {
                 </div>
                 <div>
                   <label className="text-[11px] font-mono text-text-muted uppercase tracking-wider block mb-1">Model</label>
-                  <select className="h-9 w-full bg-bg-elevated border border-border-default rounded-[6px] px-3 text-[13px] text-text-primary focus:outline-none focus:ring-1 focus:ring-accent-blue/40">
+                  <select className="h-9 w-full bg-bg-elevated border border-border-default rounded-[6px] px-3 text-[13px] text-text-primary focus:outline-none focus:border-border-strong transition-colors">
                     {data.llm.models[provider]?.map((m) => (
                       <option key={m} value={m}>{m}</option>
                     ))}
@@ -198,7 +198,7 @@ export default function SettingsPage() {
                       max={100}
                       value={thresholds[t.key]}
                       onChange={(e) => setThresholds({ ...thresholds, [t.key]: Number(e.target.value) })}
-                      className="flex-1 accent-[var(--accent-blue)] h-1"
+                      className="flex-1 h-1 accent-[var(--text-muted)]"
                     />
                     <span className="text-[13px] font-mono text-text-primary w-10 text-right">{thresholds[t.key]}%</span>
                   </div>
@@ -219,7 +219,7 @@ export default function SettingsPage() {
                         key={m}
                         onClick={() => setMode(m)}
                         className={`h-8 px-3 rounded-[6px] text-[13px] font-medium transition-colors cursor-pointer ${
-                          mode === m ? 'bg-accent-blue-bg text-accent-blue' : 'bg-bg-elevated text-text-secondary hover:text-text-primary'
+                          mode === m ? 'bg-white/[0.07] text-text-primary' : 'bg-bg-elevated text-text-secondary hover:text-text-primary'
                         }`}
                       >
                         {m === 'suggest' ? 'Suggest only' : 'Auto-fix'}
@@ -232,7 +232,7 @@ export default function SettingsPage() {
                     <span className="text-[13px] text-text-secondary">Auto-open PRs</span>
                     <button
                       onClick={() => setAutoOpenPRs(!autoOpenPRs)}
-                      className={`w-9 h-5 rounded-full transition-colors cursor-pointer ${autoOpenPRs ? 'bg-accent-blue' : 'bg-bg-overlay'}`}
+                      className={`w-9 h-5 rounded-full transition-colors cursor-pointer ${autoOpenPRs ? 'bg-border-strong' : 'bg-bg-overlay'}`}
                     >
                       <div className={`w-3.5 h-3.5 bg-white rounded-full transition-transform mx-0.5 ${autoOpenPRs ? 'translate-x-4' : 'translate-x-0.5'}`} />
                     </button>
@@ -241,7 +241,7 @@ export default function SettingsPage() {
                     <span className="text-[13px] text-text-secondary">Auto-terminate stale containers</span>
                     <button
                       onClick={() => setAutoTerminate(!autoTerminate)}
-                      className={`w-9 h-5 rounded-full transition-colors cursor-pointer ${autoTerminate ? 'bg-accent-blue' : 'bg-bg-overlay'}`}
+                      className={`w-9 h-5 rounded-full transition-colors cursor-pointer ${autoTerminate ? 'bg-border-strong' : 'bg-bg-overlay'}`}
                     >
                       <div className={`w-3.5 h-3.5 bg-white rounded-full transition-transform mx-0.5 ${autoTerminate ? 'translate-x-4' : 'translate-x-0.5'}`} />
                     </button>

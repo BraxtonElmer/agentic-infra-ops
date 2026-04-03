@@ -23,18 +23,18 @@ export function Topbar({ title, primaryAction }: TopbarProps) {
   }, []);
 
   return (
-    <header className="h-[52px] sticky top-0 bg-bg-base/80 backdrop-blur-sm border-b border-border-subtle flex items-center justify-between px-5 z-30">
-      <h1 className="text-[14px] font-medium text-text-primary">{title}</h1>
+    <header className="h-[52px] sticky top-0 bg-bg-base border-b border-border-subtle flex items-center justify-between px-4 z-30">
+      <h1 className="text-[14px] font-medium text-text-primary truncate mr-2">{title}</h1>
 
       {now && (
-        <span className="text-[12px] font-mono text-text-muted hidden sm:block">
+        <span className="text-[11px] font-mono text-text-muted hidden lg:block shrink-0">
           {now.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
           {' '}
           {now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false })}
         </span>
       )}
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5 shrink-0">
         <button
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
           className="w-8 h-8 flex items-center justify-center rounded-[6px] text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer"
@@ -43,14 +43,18 @@ export function Topbar({ title, primaryAction }: TopbarProps) {
           {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
         </button>
 
-        <Button variant="ghost" size="sm" onClick={toggleAgentDrawer}>
-          <Bot className="w-3.5 h-3.5" />
-          <span className="hidden sm:inline">View agent log</span>
-        </Button>
+        <button
+          onClick={toggleAgentDrawer}
+          className="w-8 h-8 flex items-center justify-center rounded-[6px] text-text-secondary hover:bg-bg-elevated transition-colors cursor-pointer"
+          aria-label="View agent log"
+        >
+          <Bot className="w-4 h-4" />
+        </button>
 
         {primaryAction && (
           <Button variant="primary" size="sm" onClick={primaryAction.onClick}>
-            {primaryAction.label}
+            <span className="hidden sm:inline">{primaryAction.label}</span>
+            <span className="sm:hidden">Run</span>
           </Button>
         )}
       </div>

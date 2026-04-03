@@ -43,8 +43,8 @@ export default function InfrastructurePage() {
     return (
       <>
         <Topbar title="Infrastructure" />
-        <div className="p-5 space-y-4">
-          <div className="grid grid-cols-3 gap-4">
+        <div className="p-4 sm:p-5 space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[1, 2, 3].map((i) => <Skeleton key={i} className="h-44" />)}
           </div>
           <Skeleton className="h-64" />
@@ -56,12 +56,12 @@ export default function InfrastructurePage() {
   return (
     <>
       <Topbar title="Infrastructure" primaryAction={{ label: 'Add server' }} />
-      <div className="p-5 space-y-5">
+      <div className="p-4 sm:p-5 space-y-5">
         {/* Servers */}
         <div className="section-label">Servers</div>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {data.servers.map((s) => (
-            <Card key={s.id} className={`p-4 ${s.critical ? 'border-accent-red/20' : ''}`}>
+            <Card key={s.id} className="p-4">
               <div className="flex items-center justify-between mb-1">
                 <span className="text-[13px] font-mono text-text-primary">{s.name}</span>
                 <Badge variant="green">{s.uptime}</Badge>
@@ -102,9 +102,7 @@ export default function InfrastructurePage() {
                 {data.containers.map((c) => (
                   <tr
                     key={c.id}
-                    className={`border-b border-border-subtle ${
-                      c.status === 'idle' ? 'border-l-2 border-l-accent-amber' : c.status === 'zombie' ? 'border-l-2 border-l-accent-red' : ''
-                    }`}
+                    className="border-b border-border-subtle"
                   >
                     <td className="py-2.5 px-4 font-mono text-text-primary">{c.name}</td>
                     <td className="py-2.5 px-4 font-mono text-text-secondary text-[12px]">{c.image}</td>
@@ -130,12 +128,16 @@ export default function InfrastructurePage() {
         <Card className="p-4">
           <div className="space-y-2">
             {data.staleResources.map((r) => (
-              <div key={r.id} className="flex items-center gap-3 py-2 border-b border-border-subtle last:border-0">
-                <Badge variant={resourceTypeBadge[r.type] || 'muted'}>{r.type}</Badge>
-                <span className="text-[13px] font-mono text-text-primary flex-1">{r.name}</span>
-                <span className="text-[11px] text-text-muted">Last active: {r.lastActive}</span>
-                <span className="text-[12px] font-mono text-accent-red">{r.costPerMonth}/mo</span>
-                <Button size="sm" variant="secondary">Flag for removal</Button>
+              <div key={r.id} className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 py-2 border-b border-border-subtle last:border-0">
+                <div className="flex items-center gap-2 flex-1 min-w-0">
+                  <Badge variant={resourceTypeBadge[r.type] || 'muted'}>{r.type}</Badge>
+                  <span className="text-[13px] font-mono text-text-primary truncate">{r.name}</span>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="text-[11px] text-text-muted hidden sm:inline">Last active: {r.lastActive}</span>
+                  <span className="text-[12px] font-mono text-text-secondary">{r.costPerMonth}/mo</span>
+                  <Button size="sm" variant="secondary">Flag for removal</Button>
+                </div>
               </div>
             ))}
           </div>

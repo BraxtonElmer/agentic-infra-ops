@@ -47,13 +47,12 @@ export function Sidebar() {
   const { data: counts } = useFetch<SidebarCounts>('/api/sidebar-counts');
 
   return (
-    <aside className="fixed left-0 top-0 bottom-0 w-[220px] max-md:w-[52px] bg-bg-surface border-r border-border-subtle flex flex-col z-40">
+    <aside className="hidden md:flex fixed left-0 top-0 bottom-0 w-[52px] lg:w-[220px] bg-bg-surface border-r border-border-subtle flex-col z-40">
       {/* Logo */}
-      <div className="h-[52px] flex items-center gap-2.5 px-4 max-md:px-0 max-md:justify-center border-b border-border-subtle">
-        <Hexagon className="w-5 h-5 text-accent-blue shrink-0" />
-        <div className="max-md:hidden">
-          <div className="text-[13px] font-medium text-text-primary leading-none">Axiom</div>
-          <div className="text-[10px] font-mono text-text-muted leading-none mt-0.5">agentic devops</div>
+      <div className="h-[52px] flex items-center gap-2.5 px-4 max-lg:px-0 max-lg:justify-center border-b border-border-subtle">
+        <Hexagon className="w-[18px] h-[18px] text-text-muted shrink-0" />
+        <div className="max-lg:hidden">
+          <div className="text-[13px] font-medium text-text-primary leading-none tracking-tight">Axiom</div>
         </div>
       </div>
 
@@ -67,16 +66,16 @@ export function Sidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center gap-2.5 px-2.5 max-md:px-0 max-md:justify-center h-8 rounded-[6px] text-[13px] transition-colors ${
+              className={`flex items-center gap-2.5 px-2.5 max-lg:px-0 max-lg:justify-center h-8 rounded-[6px] text-[13px] transition-colors ${
                 active
-                  ? 'bg-accent-blue-bg text-accent-blue'
-                  : 'text-text-secondary hover:bg-bg-elevated'
+                  ? 'bg-white/[0.07] text-text-primary'
+                  : 'text-text-secondary hover:bg-white/[0.04] hover:text-text-primary'
               }`}
             >
               <Icon className="w-[16px] h-[16px] shrink-0" />
-              <span className="max-md:hidden flex-1">{item.label}</span>
+              <span className="max-lg:hidden flex-1">{item.label}</span>
               {badgeValue !== null && badgeValue !== undefined && (
-                <span className="max-md:hidden flex items-center gap-1">
+                <span className="max-lg:hidden flex items-center gap-1">
                   {item.badgeKey === 'alertsActive' && <StatusDot status="critical" pulse size={5} />}
                   <Badge variant={badgeVariant[item.badgeKey!] || 'muted'}>
                     {String(badgeValue)}
@@ -92,29 +91,29 @@ export function Sidebar() {
       <div className="px-2 pb-1">
         <Link
           href="/settings"
-          className={`flex items-center gap-2.5 px-2.5 max-md:px-0 max-md:justify-center h-8 rounded-[6px] text-[13px] transition-colors ${
+          className={`flex items-center gap-2.5 px-2.5 max-lg:px-0 max-lg:justify-center h-8 rounded-[6px] text-[13px] transition-colors ${
             pathname === '/settings'
-              ? 'bg-accent-blue-bg text-accent-blue'
-              : 'text-text-secondary hover:bg-bg-elevated'
+              ? 'bg-white/[0.07] text-text-primary'
+              : 'text-text-secondary hover:bg-white/[0.04] hover:text-text-primary'
           }`}
         >
           <Settings className="w-[16px] h-[16px] shrink-0" />
-          <span className="max-md:hidden">Settings</span>
+          <span className="max-lg:hidden">Settings</span>
         </Link>
       </div>
 
       {/* Agent status pill */}
       <button
         onClick={openAgentDrawer}
-        className="mx-2 mb-3 flex items-center gap-2 px-2.5 max-md:px-0 max-md:justify-center h-8 rounded-[6px] bg-bg-elevated border border-border-subtle text-[12px] hover:border-border-default transition-colors cursor-pointer"
+        className="mx-2 mb-3 flex items-center gap-2 px-2.5 max-lg:px-0 max-lg:justify-center h-7 rounded-[6px] border border-border-subtle text-[12px] hover:border-border-default hover:bg-white/[0.03] transition-colors cursor-pointer"
       >
         <StatusDot
           status={counts?.agentState === 'acting' ? 'warning' : 'healthy'}
           pulse
-          size={6}
+          size={5}
         />
-        <span className="max-md:hidden text-text-muted font-mono text-[10px]">agent</span>
-        <span className="max-md:hidden text-text-secondary text-[11px] font-mono">
+        <span className="max-lg:hidden text-text-muted font-mono text-[10px] uppercase tracking-wider">agent</span>
+        <span className="max-lg:hidden text-text-secondary text-[10px] font-mono">
           {counts?.agentState || 'scanning'}
         </span>
       </button>

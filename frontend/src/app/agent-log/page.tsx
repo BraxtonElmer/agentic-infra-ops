@@ -48,7 +48,7 @@ export default function AgentLogPage() {
     return (
       <>
         <Topbar title="Agent Log" />
-        <div className="p-5 space-y-3">
+        <div className="p-4 sm:p-5 space-y-3">
           {[1, 2, 3, 4, 5].map((i) => <Skeleton key={i} className="h-16" />)}
         </div>
       </>
@@ -65,7 +65,7 @@ export default function AgentLogPage() {
         title="Agent Log"
         primaryAction={undefined}
       />
-      <div className="p-5 space-y-4">
+      <div className="p-4 sm:p-5 space-y-4">
         {/* Filter bar */}
         <div className="flex items-center gap-3 flex-wrap">
           <div className="flex items-center gap-1">
@@ -74,7 +74,7 @@ export default function AgentLogPage() {
                 key={f}
                 onClick={() => setFilter(f)}
                 className={`h-7 px-2.5 rounded-[6px] text-[12px] font-medium transition-colors cursor-pointer ${
-                  filter === f ? 'bg-accent-blue-bg text-accent-blue' : 'text-text-secondary hover:bg-bg-elevated'
+                  filter === f ? 'bg-bg-elevated text-text-primary' : 'text-text-secondary hover:bg-bg-elevated'
                 }`}
               >
                 {f === 'all' ? 'All' : f.charAt(0).toUpperCase() + f.slice(1)}
@@ -86,7 +86,7 @@ export default function AgentLogPage() {
             <button
               onClick={() => setLive(!live)}
               className={`h-7 px-2.5 rounded-[6px] text-[12px] font-medium transition-colors cursor-pointer ${
-                live ? 'bg-accent-green-bg text-accent-green' : 'bg-bg-elevated text-text-muted'
+                live ? 'bg-bg-elevated text-text-primary' : 'bg-bg-elevated text-text-muted'
               }`}
             >
               {live ? 'Live' : 'Paused'}
@@ -101,16 +101,23 @@ export default function AgentLogPage() {
             return (
               <Card key={entry.id} className="overflow-hidden">
                 <button
-                  className="w-full flex items-start gap-3 p-3 text-left cursor-pointer hover:bg-bg-elevated/50 transition-colors"
+                  className="w-full flex flex-col sm:flex-row items-start gap-2 sm:gap-3 p-3 text-left cursor-pointer hover:bg-bg-elevated/50 transition-colors"
                   onClick={() => setExpandedId(expanded ? null : entry.id)}
                 >
-                  <span className="text-[10px] font-mono text-text-muted shrink-0 mt-0.5 w-16">{entry.timestamp}</span>
-                  <Badge variant={typeBadge[entry.type] || 'muted'}>{entry.type}</Badge>
-                  <span className="text-[11px] font-mono text-text-secondary shrink-0">{entry.target}</span>
+                  <div className="flex items-center gap-2 sm:contents w-full">
+                    <span className="text-[10px] font-mono text-text-muted shrink-0 sm:w-16">{entry.timestamp}</span>
+                    <Badge variant="muted">{entry.type}</Badge>
+                    <span className="text-[11px] font-mono text-text-secondary shrink-0 hidden sm:inline">{entry.target}</span>
+                    <span className="ml-auto sm:hidden">
+                      {expanded
+                        ? <ChevronDown className="w-4 h-4 text-text-muted" />
+                        : <ChevronRight className="w-4 h-4 text-text-muted" />}
+                    </span>
+                  </div>
                   <p className="text-[12px] text-text-secondary flex-1 leading-relaxed">{entry.message}</p>
                   {expanded
-                    ? <ChevronDown className="w-4 h-4 text-text-muted shrink-0 mt-0.5" />
-                    : <ChevronRight className="w-4 h-4 text-text-muted shrink-0 mt-0.5" />}
+                    ? <ChevronDown className="w-4 h-4 text-text-muted shrink-0 mt-0.5 hidden sm:block" />
+                    : <ChevronRight className="w-4 h-4 text-text-muted shrink-0 mt-0.5 hidden sm:block" />}
                 </button>
                 {expanded && (
                   <div className="mx-3 mb-3 p-3 bg-bg-elevated rounded-[6px]">

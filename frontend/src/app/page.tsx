@@ -38,7 +38,7 @@ export default function OverviewPage() {
     return (
       <>
         <Topbar title="Overview" />
-        <div className="p-5 space-y-5">
+        <div className="p-4 sm:p-5 space-y-5">
           <div className="grid grid-cols-4 gap-4">
             {[1, 2, 3, 4].map((i) => <Skeleton key={i} className="h-24" />)}
           </div>
@@ -57,28 +57,29 @@ export default function OverviewPage() {
   return (
     <>
       <Topbar title="Overview" primaryAction={{ label: 'Run full scan' }} />
-      <div className="p-5 space-y-5">
+      <div className="p-4 sm:p-5 space-y-5">
         {/* Stat cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card className={`p-4 ${data.healthStatus === 'green' ? 'border-accent-green/20' : data.healthStatus === 'amber' ? 'border-accent-amber/20' : 'border-accent-red/20'}`}>
-            <div className="text-[11px] font-mono text-text-muted uppercase tracking-wider">Health Score</div>
-            <div className={`text-[32px] font-mono font-medium leading-none mt-2 ${
-              data.healthStatus === 'green' ? 'text-accent-green' : data.healthStatus === 'amber' ? 'text-accent-amber' : 'text-accent-red'
-            }`}>
+          <Card className="p-4">
+            <div className="flex items-center gap-1.5 mb-2">
+              <StatusDot status={data.healthStatus === 'green' ? 'healthy' : data.healthStatus === 'amber' ? 'warning' : 'critical'} size={5} />
+              <div className="text-[11px] font-mono text-text-muted uppercase tracking-wider">Health Score</div>
+            </div>
+            <div className="text-[32px] font-mono font-medium leading-none text-text-primary">
               {data.healthScore}
             </div>
           </Card>
-          <Card className="p-4 border-accent-amber/20">
-            <div className="text-[11px] font-mono text-text-muted uppercase tracking-wider">Monthly Waste</div>
-            <div className="text-[32px] font-mono font-medium leading-none mt-2 text-accent-amber">{data.monthlyWaste}</div>
+          <Card className="p-4">
+            <div className="text-[11px] font-mono text-text-muted uppercase tracking-wider mb-2">Monthly Waste</div>
+            <div className="text-[32px] font-mono font-medium leading-none text-text-primary">{data.monthlyWaste}</div>
           </Card>
-          <Card className="p-4 border-accent-red/20">
-            <div className="text-[11px] font-mono text-text-muted uppercase tracking-wider">Active Incidents</div>
-            <div className="text-[32px] font-mono font-medium leading-none mt-2 text-accent-red">{data.activeIncidents}</div>
+          <Card className="p-4">
+            <div className="text-[11px] font-mono text-text-muted uppercase tracking-wider mb-2">Active Incidents</div>
+            <div className="text-[32px] font-mono font-medium leading-none text-text-primary">{data.activeIncidents}</div>
           </Card>
-          <Card className="p-4 border-accent-blue/20">
-            <div className="text-[11px] font-mono text-text-muted uppercase tracking-wider">Agent Actions Today</div>
-            <div className="text-[32px] font-mono font-medium leading-none mt-2 text-accent-blue">{data.agentActionsToday}</div>
+          <Card className="p-4">
+            <div className="text-[11px] font-mono text-text-muted uppercase tracking-wider mb-2">Agent Actions Today</div>
+            <div className="text-[32px] font-mono font-medium leading-none text-text-primary">{data.agentActionsToday}</div>
           </Card>
         </div>
 
@@ -88,8 +89,8 @@ export default function OverviewPage() {
           {data.alerts.map((alert) => (
             <div
               key={alert.id}
-              className={`flex items-start gap-3 p-3 bg-bg-surface border border-border-subtle rounded-[8px] ${
-                alert.severity === 'critical' ? 'border-l-2 border-l-accent-red' : 'border-l-2 border-l-accent-amber'
+              className={`flex flex-col sm:flex-row items-start gap-3 p-3 bg-bg-surface border border-border-subtle rounded-[6px] ${
+                alert.severity === 'critical' ? 'border-l-2 border-l-accent-red/60' : 'border-l-2 border-l-accent-amber/60'
               }`}
             >
               <div className="flex-1 min-w-0">
@@ -140,7 +141,7 @@ export default function OverviewPage() {
               {data.agentLog.map((entry) => (
                 <div key={entry.id} className="flex items-start gap-2 py-1.5">
                   <span className="text-[10px] font-mono text-text-muted shrink-0 mt-0.5">{entry.timestamp}</span>
-                  <Badge variant={typeBadge[entry.type] || 'muted'}>{entry.type}</Badge>
+                  <Badge variant="muted">{entry.type}</Badge>
                   <p className="text-[12px] text-text-secondary leading-relaxed">{entry.message}</p>
                 </div>
               ))}
@@ -154,7 +155,7 @@ export default function OverviewPage() {
             <div className="section-label mb-3">Infrastructure</div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {data.servers.map((s) => (
-                <Card key={s.id} className={`p-3 ${s.ram >= 90 ? 'border-accent-red/20' : ''}`}>
+                <Card key={s.id} className="p-3">
                   <div className="text-[12px] font-mono text-text-primary mb-2">{s.name}</div>
                   <div className="space-y-1.5">
                     <MetricBar value={s.cpu} label="CPU" />
@@ -172,14 +173,14 @@ export default function OverviewPage() {
               <span className="text-[11px] text-text-muted">Total</span>
               <span className="text-[18px] font-mono text-text-primary">{data.finops.totalCost}</span>
               <span className="text-[11px] text-text-muted">Waste</span>
-              <span className="text-[14px] font-mono text-accent-red">{data.finops.totalWaste}</span>
+              <span className="text-[14px] font-mono text-text-secondary">{data.finops.totalWaste}</span>
             </div>
             <div className="space-y-2">
               {data.finops.services.map((svc) => (
                 <div key={svc.name} className="flex items-center gap-3">
                   <span className="text-[12px] text-text-secondary w-32 shrink-0 truncate">{svc.name}</span>
                   <div className="flex-1 h-[4px] bg-bg-overlay rounded-[2px] overflow-hidden flex">
-                    <div className="h-full bg-accent-blue rounded-l-[2px]" style={{ width: `${((svc.cost - svc.waste) / maxCost) * 100}%` }} />
+                    <div className="h-full bg-border-strong rounded-l-[2px]" style={{ width: `${((svc.cost - svc.waste) / maxCost) * 100}%` }} />
                     {svc.waste > 0 && (
                       <div className="h-full bg-accent-red" style={{ width: `${(svc.waste / maxCost) * 100}%` }} />
                     )}

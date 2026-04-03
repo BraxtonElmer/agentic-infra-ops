@@ -26,8 +26,8 @@ export default function FinOpsPage() {
     return (
       <>
         <Topbar title="FinOps" />
-        <div className="p-5 space-y-4">
-          <div className="grid grid-cols-3 gap-4">
+        <div className="p-4 sm:p-5 space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {[1, 2, 3].map((i) => <Skeleton key={i} className="h-24" />)}
           </div>
           <Skeleton className="h-64" />
@@ -39,20 +39,20 @@ export default function FinOpsPage() {
   return (
     <>
       <Topbar title="FinOps" primaryAction={{ label: 'Run cost scan' }} />
-      <div className="p-5 space-y-5">
+      <div className="p-4 sm:p-5 space-y-5">
         {/* Stat cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <Card className="p-4">
-            <div className="text-[11px] font-mono text-text-muted uppercase tracking-wider">Total Monthly Cost</div>
-            <div className="text-[28px] font-mono font-medium leading-none mt-2 text-text-primary">{data.totalCost}</div>
+            <div className="text-[11px] font-mono text-text-muted uppercase tracking-wider mb-2">Total Monthly Cost</div>
+            <div className="text-[28px] font-mono font-medium leading-none text-text-primary">{data.totalCost}</div>
           </Card>
-          <Card className="p-4 border-accent-red/20">
-            <div className="text-[11px] font-mono text-text-muted uppercase tracking-wider">Total Waste</div>
-            <div className="text-[28px] font-mono font-medium leading-none mt-2 text-accent-red">{data.totalWaste}</div>
+          <Card className="p-4">
+            <div className="text-[11px] font-mono text-text-muted uppercase tracking-wider mb-2">Total Waste</div>
+            <div className="text-[28px] font-mono font-medium leading-none text-text-primary">{data.totalWaste}</div>
           </Card>
-          <Card className="p-4 border-accent-green/20">
-            <div className="text-[11px] font-mono text-text-muted uppercase tracking-wider">Potential Savings</div>
-            <div className="text-[28px] font-mono font-medium leading-none mt-2 text-accent-green">{data.potentialSavings}</div>
+          <Card className="p-4">
+            <div className="text-[11px] font-mono text-text-muted uppercase tracking-wider mb-2">Potential Savings</div>
+            <div className="text-[28px] font-mono font-medium leading-none text-text-primary">{data.potentialSavings}</div>
           </Card>
         </div>
 
@@ -69,8 +69,8 @@ export default function FinOpsPage() {
                   contentStyle={{ background: 'var(--bg-elevated)', border: '1px solid var(--border-default)', borderRadius: 6, fontSize: 12 }}
                   formatter={(value) => [`₹${Number(value).toLocaleString('en-IN')}`, '']}
                 />
-                <Bar dataKey="cost" fill="var(--accent-blue)" radius={[0, 2, 2, 0]} barSize={14} />
-                <Bar dataKey="waste" fill="var(--accent-red)" radius={[0, 2, 2, 0]} barSize={14} />
+                <Bar dataKey="cost" fill="var(--border-strong)" radius={[0, 2, 2, 0]} barSize={14} />
+                <Bar dataKey="waste" fill="var(--accent-red)" radius={[0, 2, 2, 0]} barSize={14} opacity={0.7} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -92,9 +92,9 @@ export default function FinOpsPage() {
                 <Area
                   type="monotone"
                   dataKey="cost"
-                  stroke="var(--accent-blue)"
-                  strokeWidth={2}
-                  fill="var(--accent-blue-bg)"
+                  stroke="var(--text-muted)"
+                  strokeWidth={1.5}
+                  fill="var(--bg-elevated)"
                   fillOpacity={1}
                 />
               </AreaChart>
@@ -124,7 +124,8 @@ export default function FinOpsPage() {
         {/* Actions log */}
         <Card className="overflow-hidden">
           <div className="section-label px-4 pt-4 mb-3">Actions Taken</div>
-          <table className="w-full text-[13px]">
+          <div className="overflow-x-auto">
+          <table className="w-full text-[13px] min-w-[500px]">
             <thead>
               <tr className="border-b border-border-subtle text-text-muted text-[11px] font-mono uppercase tracking-wider">
                 <th className="text-left py-2.5 px-4 font-medium">Action</th>
@@ -139,7 +140,7 @@ export default function FinOpsPage() {
                 <tr key={a.id} className="border-b border-border-subtle">
                   <td className="py-2.5 px-4 text-text-primary">{a.action}</td>
                   <td className="py-2.5 px-4 font-mono text-text-secondary text-[12px]">{a.resource}</td>
-                  <td className="py-2.5 px-4 font-mono text-accent-green text-[12px]">{a.saving}</td>
+                  <td className="py-2.5 px-4 font-mono text-text-secondary text-[12px]">{a.saving}</td>
                   <td className="py-2.5 px-4 font-mono text-text-muted text-[12px]">
                     {new Date(a.timestamp).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
                   </td>
@@ -150,6 +151,7 @@ export default function FinOpsPage() {
               ))}
             </tbody>
           </table>
+          </div>
         </Card>
       </div>
     </>

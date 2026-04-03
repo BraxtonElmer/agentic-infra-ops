@@ -61,7 +61,7 @@ export default function PipelinesPage() {
     return (
       <>
         <Topbar title="Pipelines" />
-        <div className="p-5 space-y-4">
+        <div className="p-4 sm:p-5 space-y-4">
           <Skeleton className="h-10" />
           <Skeleton className="h-96" />
         </div>
@@ -89,7 +89,7 @@ export default function PipelinesPage() {
   return (
     <>
       <Topbar title="Pipelines" primaryAction={{ label: 'Trigger run' }} />
-      <div className="p-5 space-y-5">
+      <div className="p-4 sm:p-5 space-y-5">
         {/* Filter bar */}
         <div className="flex items-center gap-3 flex-wrap">
 
@@ -117,10 +117,10 @@ export default function PipelinesPage() {
                   />
                 </div>
                 <div className="max-h-48 overflow-y-auto py-1">
-                  <button
+                    <button
                     onClick={() => { setRepoFilter('all'); setBranchFilter('all'); setRepoOpen(false); }}
                     className={`w-full text-left px-3 py-1.5 text-[13px] transition-colors cursor-pointer ${
-                      repoFilter === 'all' ? 'bg-accent-blue-bg text-accent-blue' : 'text-text-muted hover:bg-bg-overlay'
+                      repoFilter === 'all' ? 'bg-bg-overlay text-text-primary' : 'text-text-muted hover:bg-bg-overlay'
                     }`}
                   >
                     All repos
@@ -130,7 +130,7 @@ export default function PipelinesPage() {
                       key={r}
                       onClick={() => { setRepoFilter(r); setBranchFilter('all'); setRepoOpen(false); }}
                       className={`w-full text-left px-3 py-1.5 text-[13px] transition-colors cursor-pointer ${
-                        repoFilter === r ? 'bg-accent-blue-bg text-accent-blue' : 'text-text-secondary hover:bg-bg-overlay'
+                        repoFilter === r ? 'bg-bg-overlay text-text-primary' : 'text-text-secondary hover:bg-bg-overlay'
                       }`}
                     >
                       {r}
@@ -146,7 +146,7 @@ export default function PipelinesPage() {
             value={branchFilter}
             onChange={(e) => setBranchFilter(e.target.value)}
             disabled={branchesForRepo.length === 0}
-            className="h-9 bg-bg-elevated border border-border-default rounded-[6px] px-3 text-[13px] text-text-primary focus:outline-none focus:ring-1 focus:ring-accent-blue/40 cursor-pointer disabled:opacity-40"
+            className="h-9 bg-bg-elevated border border-border-default rounded-[6px] px-3 text-[13px] text-text-primary focus:outline-none focus:border-border-strong transition-colors cursor-pointer disabled:opacity-40"
           >
             <option value="all">All branches</option>
             {branchesForRepo.map((b) => <option key={b} value={b}>{b}</option>)}
@@ -159,7 +159,7 @@ export default function PipelinesPage() {
                 key={s}
                 onClick={() => setStatusFilter(s)}
                 className={`h-7 px-2.5 rounded-[6px] text-[12px] font-medium transition-colors cursor-pointer ${
-                  statusFilter === s ? 'bg-accent-blue-bg text-accent-blue' : 'text-text-secondary hover:bg-bg-elevated'
+                  statusFilter === s ? 'bg-bg-elevated text-text-primary' : 'text-text-secondary hover:bg-bg-elevated'
                 }`}
               >
                 {s.charAt(0).toUpperCase() + s.slice(1)}
@@ -239,7 +239,8 @@ export default function PipelinesPage() {
         {/* Auto-fix history */}
         <Card className="overflow-hidden">
           <div className="section-label px-4 pt-4 mb-3">Auto-fix History</div>
-          <table className="w-full text-[13px]">
+          <div className="overflow-x-auto">
+          <table className="w-full text-[13px] min-w-[400px]">
             <thead>
               <tr className="border-b border-border-subtle text-text-muted text-[11px] font-mono uppercase tracking-wider">
                 <th className="text-left py-2.5 px-4 font-medium">PR Title</th>
@@ -261,6 +262,7 @@ export default function PipelinesPage() {
               ))}
             </tbody>
           </table>
+          </div>
         </Card>
       </div>
 
@@ -268,7 +270,7 @@ export default function PipelinesPage() {
       {selectedPipeline && (
         <>
           <div className="fixed inset-0 bg-black/30 z-40" onClick={() => setSelectedPipeline(null)} />
-          <div className="fixed right-0 top-0 bottom-0 w-[520px] max-w-full bg-bg-surface border-l border-border-subtle z-50 flex flex-col">
+          <div className="fixed right-0 top-0 bottom-0 w-full sm:w-[520px] bg-bg-surface border-l border-border-subtle z-50 flex flex-col">
             <div className="h-[52px] flex items-center justify-between px-4 border-b border-border-subtle shrink-0">
               <div className="flex items-center gap-2">
                 <span className="text-[13px] font-medium text-text-primary">{selectedPipeline.repo}</span>
@@ -286,7 +288,7 @@ export default function PipelinesPage() {
                   key={tab}
                   onClick={() => setDrawerTab(tab)}
                   className={`h-7 px-2.5 rounded-[6px] text-[12px] font-medium transition-colors cursor-pointer ${
-                    drawerTab === tab ? 'bg-accent-blue-bg text-accent-blue' : 'text-text-secondary hover:bg-bg-elevated'
+                    drawerTab === tab ? 'bg-bg-elevated text-text-primary' : 'text-text-secondary hover:bg-bg-elevated'
                   }`}
                 >
                   {tab === 'log' ? 'Log Output' : tab === 'diagnosis' ? 'Agent Diagnosis' : 'Suggested Diff'}

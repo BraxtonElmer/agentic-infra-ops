@@ -45,7 +45,7 @@ export function AgentDrawer() {
         <div className="fixed inset-0 bg-black/30 z-40" onClick={close} />
       )}
       <div
-        className={`fixed right-0 top-0 bottom-0 w-[400px] max-w-full bg-bg-surface border-l border-border-subtle z-50 flex flex-col transition-transform duration-200 ${
+        className={`fixed right-0 top-0 bottom-0 w-full sm:w-[400px] bg-bg-surface border-l border-border-subtle z-50 flex flex-col transition-transform duration-200 ${
           open ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
@@ -63,7 +63,7 @@ export function AgentDrawer() {
             <div key={entry.id} className="p-2.5 rounded-[6px] bg-bg-elevated border border-border-subtle">
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-[10px] font-mono text-text-muted">{entry.timestamp}</span>
-                <Badge variant={typeBadgeVariant[entry.type] || 'muted'}>{entry.type}</Badge>
+                <Badge variant="muted">{entry.type}</Badge>
                 <span className="text-[11px] font-mono text-text-secondary">{entry.target}</span>
               </div>
               <p className="text-[12px] text-text-secondary leading-relaxed">{entry.message}</p>

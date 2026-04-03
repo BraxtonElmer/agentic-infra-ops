@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Sidebar } from "@/components/shell/sidebar";
 import { AgentDrawer } from "@/components/shell/agent-drawer";
+import { BottomNav } from "@/components/shell/bottom-nav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,10 +35,11 @@ export default function RootLayout({
       <body className="min-h-full bg-bg-base text-text-primary font-[family-name:var(--font-geist-sans)]">
         <ThemeProvider>
           <Sidebar />
-          <main className="ml-[220px] max-md:ml-[52px] min-h-screen">
+          <main className="md:ml-[52px] lg:ml-[220px] min-h-screen pb-14 md:pb-0">
             {children}
           </main>
           <AgentDrawer />
+          <BottomNav />
         </ThemeProvider>
       </body>
     </html>
