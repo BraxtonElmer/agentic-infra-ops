@@ -92,8 +92,8 @@ export default function FinOpsPage() {
                 <Area
                   type="monotone"
                   dataKey="cost"
-                  stroke="var(--text-muted)"
-                  strokeWidth={1.5}
+                  stroke="var(--text-primary)"
+                  strokeWidth={2}
                   fill="var(--bg-elevated)"
                   fillOpacity={1}
                 />

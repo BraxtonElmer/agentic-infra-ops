@@ -117,7 +117,7 @@ export default function OverviewPage() {
                 <div key={p.id} className="flex items-center gap-3 py-2 border-b border-border-subtle last:border-0">
                   <StatusDot status={p.status as 'pass' | 'fail' | 'running'} size={7} />
                   <span className="text-[13px] text-text-primary flex-1">{p.repo}</span>
-                  <Badge variant="muted">{p.branch}</Badge>
+                  <Badge variant="blue">{p.branch}</Badge>
                   {p.error && <Badge variant="red">{p.error}</Badge>}
                   {p.duration && <span className="text-[11px] font-mono text-text-secondary">{p.duration}</span>}
                   <span className="text-[11px] font-mono text-text-muted">{p.time}</span>

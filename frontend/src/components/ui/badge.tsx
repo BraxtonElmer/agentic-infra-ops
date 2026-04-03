@@ -7,12 +7,12 @@ interface BadgeProps {
 }
 
 const variantMap = {
-  blue:   'bg-bg-overlay text-text-secondary border border-border-subtle',
-  green:  'bg-accent-green-bg text-accent-green border border-accent-green/15',
-  amber:  'bg-accent-amber-bg text-accent-amber border border-accent-amber/15',
-  red:    'bg-accent-red-bg text-accent-red border border-accent-red/15',
-  purple: 'bg-bg-overlay text-text-secondary border border-border-subtle',
-  muted:  'bg-bg-overlay text-text-muted border border-border-subtle',
+  blue:   'bg-accent-blue-bg text-accent-blue border border-accent-blue/20',
+  green:  'bg-accent-green-bg text-accent-green border border-accent-green/20',
+  amber:  'bg-accent-amber-bg text-accent-amber border border-accent-amber/20',
+  red:    'bg-accent-red-bg text-accent-red border border-accent-red/20',
+  purple: 'bg-accent-purple-bg text-accent-purple border border-accent-purple/20',
+  muted:  'bg-bg-overlay text-text-secondary border border-border-default',
 };
 
 export function Badge({ children, variant = 'muted', className = '' }: BadgeProps) {
