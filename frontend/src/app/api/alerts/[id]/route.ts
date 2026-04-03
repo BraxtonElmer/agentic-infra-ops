@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
-import { NextRequest } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 
+export const dynamic = 'force-dynamic';
 const BACKEND = process.env.BACKEND_URL ?? 'http://127.0.0.1:8000';
 
 export async function PUT(
@@ -9,9 +9,7 @@ export async function PUT(
 ) {
   const { id } = await params;
   try {
-    const res = await fetch(`${BACKEND}/api/alerts/${id}/acknowledge`, {
-      method: 'PUT',
-    });
+    const res = await fetch(`${BACKEND}/api/alerts/${id}/acknowledge`, { method: 'PUT' });
     const data = await res.json();
     return NextResponse.json(data);
   } catch {
@@ -28,6 +26,20 @@ export async function DELETE(
     const res = await fetch(`${BACKEND}/api/alerts/${id}`, { method: 'DELETE' });
     const data = await res.json();
     return NextResponse.json(data);
+  } catch {
+    return NextResponse.json({ error: 'backend unavailable' }, { status: 502 });
+  }
+}
+
+export async function POST(
+  _req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  try {
+    const res = await fetch(`${BACKEND}/api/alerts/${id}/auto-fix`, { method: 'POST' });
+    const data = await res.json();
+    return NextResponse.json(data, { status: res.status });
   } catch {
     return NextResponse.json({ error: 'backend unavailable' }, { status: 502 });
   }

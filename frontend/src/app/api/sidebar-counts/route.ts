@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 
+export const dynamic = 'force-dynamic';
 const BACKEND = process.env.BACKEND_URL ?? 'http://127.0.0.1:8000';
 
 export async function GET() {
@@ -10,14 +11,4 @@ export async function GET() {
   } catch {
     return NextResponse.json({ error: 'backend unavailable' }, { status: 502 });
   }
-}
-
-function _mock() {
-  return NextResponse.json({
-    pipelinesFailed: 3,
-    infraCritical: 2,
-    finopsWaste: '₹14.2k',
-    alertsActive: 5,
-    agentState: 'scanning',
-  });
 }
