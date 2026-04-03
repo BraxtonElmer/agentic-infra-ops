@@ -32,7 +32,7 @@ const typeBadge: Record<string, 'blue' | 'green' | 'purple' | 'amber' | 'red'> =
 };
 
 export default function OverviewPage() {
-  const { data, isLoading } = useFetch<OverviewData>('/api/overview');
+  const { data, isLoading, mutate } = useFetch<OverviewData>('/api/overview', { refreshInterval: 15000 });
 
   if (isLoading || !data) {
     return (
@@ -52,11 +52,23 @@ export default function OverviewPage() {
     );
   }
 
-  const maxCost = Math.max(...data.finops.services.map((s) => s.cost));
+  const maxCost = data.finops.services.length > 0
+    ? Math.max(...data.finops.services.map((s) => s.cost))
+    : 1;
+
+  async function handleScan() {
+    await fetch('/api/agent-log', { method: 'POST' });
+    mutate();
+  }
+
+  async function handleAutoFix(id: string) {
+    await fetch(`/api/alerts/${id}`, { method: 'POST' });
+    mutate();
+  }
 
   return (
     <>
-      <Topbar title="Overview" primaryAction={{ label: 'Run full scan' }} />
+      <Topbar title="Overview" primaryAction={{ label: 'Run full scan', onClick: handleScan }} />
       <div className="p-4 sm:p-5 space-y-5">
         {/* Stat cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -86,6 +98,9 @@ export default function OverviewPage() {
         {/* Active alerts */}
         <div className="space-y-2">
           <div className="section-label">Active Alerts</div>
+          {data.alerts.length === 0 && (
+            <p className="text-[12px] text-text-muted py-4 text-center">No active alerts — all systems healthy.</p>
+          )}
           {data.alerts.map((alert) => (
             <div
               key={alert.id}
@@ -101,7 +116,7 @@ export default function OverviewPage() {
                 <p className="text-[12px] text-text-secondary">{alert.detail}</p>
               </div>
               <div className="flex items-center gap-2 shrink-0">
-                <Button size="sm" variant="primary">Auto-fix</Button>
+                <Button size="sm" variant="primary" onClick={() => handleAutoFix(alert.id)}>Auto-fix</Button>
                 <Button size="sm" variant="ghost">Dismiss</Button>
               </div>
             </div>
@@ -113,6 +128,9 @@ export default function OverviewPage() {
           <Card className="p-4">
             <div className="section-label mb-3">Recent Pipelines</div>
             <div className="space-y-0">
+              {data.pipelines.length === 0 && (
+                <p className="text-[12px] text-text-muted py-4 text-center">No pipeline data. Connect a GitHub repo to sync CI/CD runs.</p>
+              )}
               {data.pipelines.map((p) => (
                 <div key={p.id} className="flex items-center gap-3 py-2 border-b border-border-subtle last:border-0">
                   <StatusDot status={p.status as 'pass' | 'fail' | 'running'} size={7} />
@@ -190,11 +208,13 @@ export default function OverviewPage() {
               ))}
             </div>
             <div className="mt-3">
-              <AgentInsight
-                label="agent · savings"
-                description={data.finops.agentSavings}
-                actionText="View all recommendations"
-              />
+              {data.finops.agentSavings && data.finops.agentSavings !== 'N/A' && (
+                <AgentInsight
+                  label="agent · savings"
+                  description={data.finops.agentSavings}
+                  actionText="View all recommendations"
+                />
+              )}
             </div>
           </Card>
         </div>

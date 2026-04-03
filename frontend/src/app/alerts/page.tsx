@@ -33,8 +33,23 @@ const severityBg: Record<string, string> = {
 };
 
 export default function AlertsPage() {
-  const { data, isLoading } = useFetch<AlertsData>('/api/alerts');
+  const { data, isLoading, mutate } = useFetch<AlertsData>('/api/alerts', { refreshInterval: 15000 });
   const [tab, setTab] = useState<'active' | 'history'>('active');
+
+  async function handleAutoFix(id: string) {
+    await fetch(`/api/alerts/${id}`, { method: 'POST' });
+    mutate();
+  }
+
+  async function handleAcknowledge(id: string) {
+    await fetch(`/api/alerts/${id}`, { method: 'PUT' });
+    mutate();
+  }
+
+  async function handleDismiss(id: string) {
+    await fetch(`/api/alerts/${id}`, { method: 'DELETE' });
+    mutate();
+  }
 
   if (isLoading || !data) {
     return (
@@ -92,9 +107,9 @@ export default function AlertsPage() {
                     </div>
                   </div>
                   <div className="flex sm:flex-col gap-1.5 shrink-0">
-                    <Button size="sm" variant="primary">Auto-fix</Button>
-                    <Button size="sm" variant="secondary">Acknowledge</Button>
-                    <Button size="sm" variant="ghost">Dismiss</Button>
+                    <Button size="sm" variant="primary" onClick={() => handleAutoFix(alert.id)}>Auto-fix</Button>
+                    <Button size="sm" variant="secondary" onClick={() => handleAcknowledge(alert.id)}>Acknowledge</Button>
+                    <Button size="sm" variant="ghost" onClick={() => handleDismiss(alert.id)}>Dismiss</Button>
                   </div>
                 </div>
               </Card>

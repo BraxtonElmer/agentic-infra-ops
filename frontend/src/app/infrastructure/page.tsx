@@ -37,7 +37,7 @@ const resourceTypeBadge: Record<string, 'amber' | 'red' | 'muted'> = {
 };
 
 export default function InfrastructurePage() {
-  const { data, isLoading } = useFetch<InfraData>('/api/infrastructure');
+  const { data, isLoading } = useFetch<InfraData>('/api/infrastructure', { refreshInterval: 15000 });
 
   if (isLoading || !data) {
     return (

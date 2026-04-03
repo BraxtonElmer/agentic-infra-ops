@@ -37,7 +37,7 @@ const prStatusBadge: Record<string, 'green' | 'purple' | 'muted'> = {
 };
 
 export default function PipelinesPage() {
-  const { data, isLoading } = useFetch<PipelinesData>('/api/pipelines');
+  const { data, isLoading } = useFetch<PipelinesData>('/api/pipelines', { refreshInterval: 30000 });
   const [repoFilter, setRepoFilter] = useState('all');
   const [repoSearch, setRepoSearch] = useState('');
   const [repoOpen, setRepoOpen] = useState(false);
@@ -211,6 +211,15 @@ export default function PipelinesPage() {
                     </td>
                   </tr>
                 ))}
+                {filtered.length === 0 && (
+                  <tr>
+                    <td colSpan={7} className="py-12 text-center text-text-muted text-[13px]">
+                      {data.pipelines.length === 0
+                        ? 'No pipelines found. Connect a GitHub repository in Settings to sync CI/CD runs.'
+                        : 'No pipelines match the current filters.'}
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>

@@ -20,7 +20,7 @@ interface FinOpsData {
 }
 
 export default function FinOpsPage() {
-  const { data, isLoading } = useFetch<FinOpsData>('/api/finops');
+  const { data, isLoading } = useFetch<FinOpsData>('/api/finops', { refreshInterval: 30000 });
 
   if (isLoading || !data) {
     return (

@@ -39,9 +39,9 @@ const typeToCategory: Record<string, string> = {
 };
 
 export default function AgentLogPage() {
-  const { data, isLoading } = useFetch<AgentLogData>('/api/agent-log');
   const [filter, setFilter] = useState('all');
   const [live, setLive] = useState(true);
+  const { data, isLoading } = useFetch<AgentLogData>('/api/agent-log', { refreshInterval: live ? 12000 : 0 });
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   if (isLoading || !data) {
