@@ -2,10 +2,13 @@
 GET /api/alerts                      — active + history
 PUT /api/alerts/{alert_id}/acknowledge
 DELETE /api/alerts/{alert_id}        — dismiss
+POST /api/alerts/{alert_id}/auto-fix — agent stops container + resolves alert
 """
+import uuid
+import docker
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from database import get_db, Alert
+from database import get_db, Alert, AgentLogEntry
 from datetime import datetime, timezone
 
 router = APIRouter()
@@ -68,3 +71,57 @@ def dismiss_alert(alert_id: str, db: Session = Depends(get_db)):
     alert.resolve_action = "Dismissed by user."
     db.commit()
     return {"status": "dismissed"}
+
+
+@router.post("/api/alerts/{alert_id}/auto-fix")
+def auto_fix_alert(alert_id: str, db: Session = Depends(get_db)):
+    """Agentic auto-fix: stops the idle container referenced by the alert."""
+    alert = db.query(Alert).filter(Alert.alert_id == alert_id).first()
+    if not alert:
+        raise HTTPException(status_code=404, detail="Alert not found")
+    if alert.status != "active":
+        raise HTTPException(status_code=400, detail="Alert is already resolved")
+
+    container_name = alert.resource
+    action_detail = ""
+
+    # Attempt to stop the container via Docker
+    try:
+        client = docker.from_env()
+        matches = [c for c in client.containers.list(all=True) if c.name == container_name]
+        if not matches:
+            raise HTTPException(status_code=404, detail=f"Container '{container_name}' not found")
+        container = matches[0]
+        if container.status == "running":
+            container.stop(timeout=10)
+            action_detail = f"Stopped running container '{container_name}'."
+        else:
+            action_detail = f"Container '{container_name}' was already stopped (status: {container.status})."
+    except docker.errors.APIError as e:
+        raise HTTPException(status_code=500, detail=f"Docker error: {e.explanation}")
+
+    # Resolve the alert
+    alert.status = "resolved"
+    alert.resolved_at = datetime.now(timezone.utc)
+    alert.resolved_by = "agent"
+    alert.resolve_action = f"Auto-fixed: {action_detail}"
+
+    # Create agent log entry
+    log_entry = AgentLogEntry(
+        entry_id=str(uuid.uuid4()),
+        timestamp=datetime.now(timezone.utc),
+        type="fix",
+        target=container_name,
+        message=f"Auto-fix applied: {action_detail}",
+        reasoning=f"Alert '{alert.title}' flagged resource '{container_name}'. "
+                  f"Agent determined the container could be safely stopped to free resources and reduce waste.",
+    )
+    db.add(log_entry)
+    db.commit()
+
+    return {
+        "status": "resolved",
+        "action": action_detail,
+        "alertId": alert_id,
+        "container": container_name,
+    }
