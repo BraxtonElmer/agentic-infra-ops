@@ -87,6 +87,15 @@ def collect_metrics():
         db.query(ContainerMetric).delete()
         db.commit()
         for c in containers:
+            # Compute idle_days for non-running containers from uptime string
+            idle_days = None
+            if c["status"] == "idle":
+                uptime = c.get("uptime", "")
+                if "stopped" in uptime and "d" in uptime:
+                    try:
+                        idle_days = int(uptime.split("stopped")[1].split("d")[0].strip())
+                    except (ValueError, IndexError):
+                        idle_days = None
             db.add(ContainerMetric(
                 container_id=c["container_id"],
                 name=c["name"],
@@ -96,6 +105,7 @@ def collect_metrics():
                 net_io=c["net_io"],
                 uptime=c["uptime"],
                 status=c["status"],
+                idle_days=idle_days,
             ))
         db.commit()
 

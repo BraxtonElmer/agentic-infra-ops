@@ -66,11 +66,17 @@ def get_infrastructure(db: Session = Depends(get_db)):
     stale = []
     for c in containers:
         if c["status"] in ("idle", "zombie"):
+            if c.get("idleDays"):
+                last_active = f"{c['idleDays']} days ago"
+            elif "stopped" in c.get("uptime", ""):
+                last_active = c["uptime"]  # e.g. "stopped 5d ago"
+            else:
+                last_active = "inactive"
             stale.append({
                 "id": c["id"],
                 "type": "zombie" if c["status"] == "zombie" else "container",
                 "name": c["name"],
-                "lastActive": f"{c.get('idleDays', '?')} days ago" if c.get("idleDays") else "unknown",
+                "lastActive": last_active,
                 "costPerMonth": "N/A",
             })
 
