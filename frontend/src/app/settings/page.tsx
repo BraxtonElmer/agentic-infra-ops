@@ -51,6 +51,8 @@ export default function SettingsPage() {
   const [mode, setMode] = useState('suggest');
   const [autoOpenPRs, setAutoOpenPRs] = useState(true);
   const [autoTerminate, setAutoTerminate] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saved' | 'error'>('idle');
 
   useEffect(() => {
     if (data) {
@@ -61,6 +63,28 @@ export default function SettingsPage() {
       setAutoTerminate(data.agentBehavior.autoTerminateStale);
     }
   }, [data]);
+
+  async function handleSave() {
+    setSaving(true);
+    setSaveStatus('idle');
+    try {
+      await fetch('/api/settings', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          thresholds,
+          llm: { ...data?.llm, provider },
+          agentBehavior: { mode, autoOpenPRs, autoTerminateStale: autoTerminate, webhookUrl: data?.agentBehavior.webhookUrl ?? '' },
+        }),
+      });
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus('idle'), 2500);
+    } catch {
+      setSaveStatus('error');
+    } finally {
+      setSaving(false);
+    }
+  }
 
   if (isLoading || !data) {
     return (
@@ -75,7 +99,7 @@ export default function SettingsPage() {
 
   return (
     <>
-      <Topbar title="Settings" />
+      <Topbar title="Settings" primaryAction={{ label: saving ? 'Saving…' : saveStatus === 'saved' ? 'Saved ✓' : 'Save settings', onClick: handleSave }} />
       <div className="p-4 sm:p-5 flex flex-col md:flex-row gap-5">
         {/* Sub-nav */}
         <div className="flex md:flex-col md:w-48 shrink-0 gap-0.5 overflow-x-auto md:overflow-visible pb-1 md:pb-0 border-b md:border-b-0 md:border-r-0 border-border-subtle md:pr-0">
