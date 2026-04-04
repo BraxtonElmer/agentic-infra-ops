@@ -35,10 +35,16 @@ const severityBg: Record<string, string> = {
 export default function AlertsPage() {
   const { data, isLoading, mutate } = useFetch<AlertsData>('/api/alerts', { refreshInterval: 15000 });
   const [tab, setTab] = useState<'active' | 'history'>('active');
+  const [fixingId, setFixingId] = useState<string | null>(null);
 
   async function handleAutoFix(id: string) {
-    await fetch(`/api/alerts/${id}`, { method: 'POST' });
-    mutate();
+    setFixingId(id);
+    try {
+      await fetch(`/api/alerts/${id}`, { method: 'POST' });
+      await mutate();
+    } finally {
+      setFixingId(null);
+    }
   }
 
   async function handleAcknowledge(id: string) {
@@ -107,7 +113,11 @@ export default function AlertsPage() {
                     </div>
                   </div>
                   <div className="flex sm:flex-col gap-1.5 shrink-0">
-                    <Button size="sm" variant="primary" onClick={() => handleAutoFix(alert.id)}>Auto-fix</Button>
+                    {alert.title === 'Idle container detected' && (
+                      <Button size="sm" variant="primary" onClick={() => handleAutoFix(alert.id)} disabled={fixingId === alert.id}>
+                        {fixingId === alert.id ? 'Fixing…' : 'Auto-fix'}
+                      </Button>
+                    )}
                     <Button size="sm" variant="secondary" onClick={() => handleAcknowledge(alert.id)}>Acknowledge</Button>
                     <Button size="sm" variant="ghost" onClick={() => handleDismiss(alert.id)}>Dismiss</Button>
                   </div>

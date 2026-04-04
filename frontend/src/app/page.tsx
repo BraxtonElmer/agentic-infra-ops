@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { Topbar } from '@/components/shell/topbar';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -33,6 +34,7 @@ const typeBadge: Record<string, 'blue' | 'green' | 'purple' | 'amber' | 'red'> =
 
 export default function OverviewPage() {
   const { data, isLoading, mutate } = useFetch<OverviewData>('/api/overview', { refreshInterval: 15000 });
+  const [fixingId, setFixingId] = useState<string | null>(null);
 
   if (isLoading || !data) {
     return (
@@ -62,8 +64,13 @@ export default function OverviewPage() {
   }
 
   async function handleAutoFix(id: string) {
-    await fetch(`/api/alerts/${id}`, { method: 'POST' });
-    mutate();
+    setFixingId(id);
+    try {
+      await fetch(`/api/alerts/${id}`, { method: 'POST' });
+      await mutate();
+    } finally {
+      setFixingId(null);
+    }
   }
 
   return (
@@ -116,7 +123,11 @@ export default function OverviewPage() {
                 <p className="text-[12px] text-text-secondary">{alert.detail}</p>
               </div>
               <div className="flex items-center gap-2 shrink-0">
-                <Button size="sm" variant="primary" onClick={() => handleAutoFix(alert.id)}>Auto-fix</Button>
+                {alert.title === 'Idle container detected' && (
+                  <Button size="sm" variant="primary" onClick={() => handleAutoFix(alert.id)} disabled={fixingId === alert.id}>
+                    {fixingId === alert.id ? 'Fixing…' : 'Auto-fix'}
+                  </Button>
+                )}
                 <Button size="sm" variant="ghost">Dismiss</Button>
               </div>
             </div>
