@@ -8,7 +8,7 @@ import uuid
 import docker
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from database import get_db, Alert, AgentLogEntry
+from database import get_db, Alert, AgentLogEntry, ContainerMetric
 from datetime import datetime, timezone
 
 router = APIRouter()
@@ -117,6 +117,14 @@ def auto_fix_alert(alert_id: str, db: Session = Depends(get_db)):
                   f"Agent determined the container could be safely stopped to free resources and reduce waste.",
     )
     db.add(log_entry)
+
+    # Immediately update ContainerMetric so the infrastructure page reflects
+    # the stopped state on the next SWR poll without waiting for the scheduler
+    cm = db.query(ContainerMetric).filter(ContainerMetric.name == container_name).first()
+    if cm:
+        cm.status = "stopped"
+        cm.cpu = 0.0
+
     db.commit()
 
     return {
