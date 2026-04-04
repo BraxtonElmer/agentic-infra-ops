@@ -110,11 +110,11 @@ def collect_containers() -> list[dict]:
                 uptime = _stopped_str(c.attrs["State"].get("FinishedAt", ""))
 
             # Determine status:
-            # - Not running (exited/created/paused) → idle
-            # - Running with zero CPU AND minimal net I/O (< 10 kB lifetime, i.e. Docker overhead only) → idle
+            # - Not running (exited/created/paused) → stopped
+            # - Running with zero CPU AND minimal net I/O (< 10 kB lifetime) → idle
             # - Running with CPU activity OR significant net I/O → running
             if c.status != "running":
-                status = "idle"
+                status = "stopped"
             elif cpu == 0.0 and (net_rx + net_tx) < 10_000:
                 status = "idle"
             else:

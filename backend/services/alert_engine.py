@@ -78,6 +78,7 @@ def evaluate_server_metrics(db: Session, server_name: str, cpu: float, ram: floa
 
 def evaluate_containers(db: Session, containers: list[dict]):
     for c in containers:
+        # Only alert on running-but-idle containers, not stopped ones
         if c.get("status") == "idle" and c.get("cpu", 0) < 0.5:
             _create(db, "info", "Idle container detected", c["name"],
                     f"Container {c['name']} is running but has had near-zero CPU/RAM utilization.",

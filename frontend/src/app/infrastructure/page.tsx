@@ -28,8 +28,8 @@ interface InfraData {
   staleResources: StaleResource[];
 }
 
-const statusBadge: Record<string, 'green' | 'blue' | 'amber' | 'red'> = {
-  running: 'green', idle: 'amber', zombie: 'red',
+const statusBadge: Record<string, 'green' | 'blue' | 'amber' | 'red' | 'muted'> = {
+  running: 'green', idle: 'amber', zombie: 'red', stopped: 'muted',
 };
 
 const resourceTypeBadge: Record<string, 'amber' | 'red' | 'muted'> = {
