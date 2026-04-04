@@ -1,9 +1,10 @@
 """
 Auto-generates alerts from threshold breaches and LLM findings.
-Deduplicates: does not create a new alert if one is already active for same resource+title.
+Deduplicates: does not create a new alert if one with the same resource+title
+already exists in an active, acknowledged, or dismissed state within the last 24 hours.
 """
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from sqlalchemy.orm import Session
 from database import Alert
 
@@ -17,10 +18,12 @@ def _get_setting(db: Session, key: str, default):
 
 
 def _alert_exists(db: Session, title: str, resource: str) -> bool:
+    """Returns True if any alert with this title+resource was created in the last 24 hours."""
+    cutoff = datetime.now(timezone.utc) - timedelta(hours=24)
     return db.query(Alert).filter(
         Alert.title == title,
         Alert.resource == resource,
-        Alert.status == "active",
+        Alert.created_at >= cutoff,
     ).first() is not None
 
 
