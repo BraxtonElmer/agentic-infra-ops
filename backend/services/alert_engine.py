@@ -18,11 +18,13 @@ def _get_setting(db: Session, key: str, default):
 
 
 def _alert_exists(db: Session, title: str, resource: str) -> bool:
-    """Returns True if any alert with this title+resource was created in the last 24 hours."""
+    """Suppress duplicate creation for active/acknowledged/dismissed alerts within 24h.
+    Resolved alerts (auto-fixed) are allowed to respawn so the demo reset works."""
     cutoff = datetime.now(timezone.utc) - timedelta(hours=24)
     return db.query(Alert).filter(
         Alert.title == title,
         Alert.resource == resource,
+        Alert.status.in_(["active", "acknowledged", "dismissed"]),
         Alert.created_at >= cutoff,
     ).first() is not None
 
