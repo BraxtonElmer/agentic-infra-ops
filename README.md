@@ -2,6 +2,8 @@
 
 > An autonomous DevOps and FinOps dashboard that monitors a self-hosted server in real time, runs LLM-powered analysis every 10 minutes, raises alerts for detected problems, and executes remediations — including stopping abandoned containers — without manual intervention.
 
+![Axiom Overview](images/Screenshot_1.png)
+
 ---
 
 ## The Idea
@@ -109,6 +111,26 @@ When the user clicks Auto-fix on an idle container alert, the backend calls `con
 | Time-series charts | Infrastructure and FinOps show current snapshot only |
 | Multi-server SSH | Code exists but no remote servers are configured |
 | WebSocket push | Frontend polls; no event-driven real-time channel |
+
+---
+
+## Dashboard
+
+**Alerts** — every active issue with LLM-generated assessment, recommendation, and one-click Auto-fix on agent-actionable findings.
+
+![Alerts page](images/Screenshot_5.png)
+
+**Pipelines** — CI/CD run history with status filters, a 7-day pass/fail trend, and an auto-fix drawer that opens on failed runs to show the agent's root-cause diagnosis and suggested diff.
+
+![Pipelines page](images/Screenshot_2.png)
+
+**Infrastructure** — live per-server resource bars and per-container CPU/RAM/Net I/O. Stale resource flags surface containers the agent has decided are safe to retire.
+
+![Infrastructure page](images/Screenshot_3.png)
+
+**FinOps** — monthly cost, total waste, and potential savings, broken down by service. Each wasted resource ships with its own AI recommendation.
+
+![FinOps page](images/Screenshot_4.png)
 
 ---
 
